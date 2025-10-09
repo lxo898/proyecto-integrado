@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil{% endblock %}
+{% block content %}
+
+<section class="p-4 rounded-4 mb-4 text-white"
+         style="background: linear-gradient(135deg,#0d6efd,#6610f2);">
+  <h1 class="h3 m-0">👤 Mi perfil</h1>
+</section>
+
+<style>
+/* Pequeño estilo para inputs si no traen clases Bootstrap desde el form */
+form input[type="text"], form input[type="email"], form input[type="number"],
+form input[type="tel"], form textarea, form select {
+  width: 100%; padding: .6rem .8rem; border: 1px solid #dee2e6;
+  border-radius: .5rem; background: #fff;
+}
+</style>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Preferencias</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}
+              <div class="text-danger small">{{ form.phone.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-check mb-4">
+            {{ form.receive_emails }}
+            <label class="form-check-label" for="{{ form.receive_emails.id_for_label }}">
+              Recibir correos de notificaciones
+            </label>
+            {% if form.receive_emails.errors %}
+              <div class="text-danger small">{{ form.receive_emails.errors }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary rounded-3">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
