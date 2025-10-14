@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Aprobaciones pendientes{% endblock %}
+{% block content %}
+<section class="p-4 rounded-4 mb-4 text-white"
+         style="background: linear-gradient(135deg,#20c997,#0d6efd);">
+  <h1 class="h3 m-0">📝 Aprobaciones pendientes</h1>
+</section>
+
+<div class="card shadow-sm border-0 rounded-4">
+  <div class="card-body">
+    {% if reservations %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Usuario</th>
+              <th>Espacio</th>
+              <th>Inicio</th>
+              <th>Término</th>
+              <th>Motivo</th>
+              <th style="width: 130px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in reservations %}
+            <tr>
+              <td class="fw-semibold">{{ r.user.username }}</td>
+              <td>{{ r.space }}</td>
+              <td><small class="text-muted">{{ r.start|date:"Y-m-d H:i" }}</small></td>
+              <td><small class="text-muted">{{ r.end|date:"Y-m-d H:i" }}</small></td>
+              <td>{{ r.purpose|default:"—" }}</td>
+              <td>
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{% url 'approve_or_reject' r.id %}">
+                  Revisar
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-info m-0">No hay solicitudes pendientes.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

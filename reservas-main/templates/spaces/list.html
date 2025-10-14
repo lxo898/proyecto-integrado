@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Espacios{% endblock %}
+{% block content %}
+
+<section class="p-4 rounded-4 mb-4 text-white"
+         style="background: linear-gradient(135deg,#0d6efd,#6610f2);">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="h3 m-0">🏢 Espacios</h1>
+
+    {# Solo staff ve el botón de alta #}
+    {% if user.is_staff %}
+      <a href="{% url 'space_new' %}" class="btn btn-light text-primary rounded-3">
+        + Nuevo espacio
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<div class="card shadow-sm border-0 rounded-4">
+  <div class="card-body">
+    {% if object_list %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Ubicación</th>
+              <th>Capacidad</th>
+              <th>Activo</th>
+              {% if user.is_staff %}
+                <th style="width: 180px;">Acciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in object_list %}
+              <tr>
+                <td class="fw-semibold">{{ s.name }}</td>
+                <td>{{ s.location|default:"—" }}</td>
+                <td>{{ s.capacity }}</td>
+                <td>
+                  {% if s.is_active %}
+                    <span class="badge rounded-pill text-bg-success">Sí</span>
+                  {% else %}
+                    <span class="badge rounded-pill text-bg-secondary">No</span>
+                  {% endif %}
+                </td>
+
+                {% if user.is_staff %}
+                  <td>
+                    <div class="btn-group">
+                      <a class="btn btn-sm btn-outline-primary" href="{% url 'space_edit' s.id %}">Editar</a>
+                      <a class="btn btn-sm btn-outline-danger" href="{% url 'space_delete' s.id %}">Eliminar</a>
+                    </div>
+                  </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-info m-0">No hay espacios cargados.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
