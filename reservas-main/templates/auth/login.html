@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Ingresar{% endblock %}
+
+{% block content %}
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 m-0">Ingresar</h1>
+      <div class="small text-white-50">Accede a tu cuenta · Reservas Inacap</div>
+    </div>
+    <div class="d-none d-md-block">
+      <a href="{% url 'register' %}" class="btn btn-light text-danger rounded-3">
+        <i class="bi bi-person-plus"></i> Crear cuenta
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-3">
+              {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label" for="id_username">Usuario</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="text-danger small">{{ form.username.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="id_password">Contraseña</label>
+            <div class="input-group">
+              {{ form.password }}
+              <button class="btn btn-outline-secondary" type="button" id="togglePwd" aria-label="Mostrar u ocultar contraseña" title="Mostrar contraseña" aria-pressed="false">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.password.errors %}
+              <div class="text-danger small">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <a class="small text-muted" href="{% url 'password_reset' %}">
+              ¿Olvidaste tu contraseña?
+            </a>
+            <div class="d-flex gap-2">
+              <a href="{% url 'register' %}" class="btn btn-outline-secondary rounded-3">
+                <i class="bi bi-person-plus"></i> Registrarme
+              </a>
+              <button type="submit" class="btn btn-danger rounded-3">
+                <i class="bi bi-box-arrow-in-right"></i> Entrar
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="small text-muted">
+          ¿Sin cuenta? <a href="{% url 'register' %}">Crea una ahora</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Toggle robusto para mostrar/ocultar contraseña
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('togglePwd');
+    if (!btn) return;
+
+    // Busca primero por id que usa Django por defecto, si no por name
+    const pwdInput =
+      document.getElementById('id_password') ||
+      document.querySelector('input[name="password"]') ||
+      document.querySelector('input[type="password"]');
+
+    if (!pwdInput) return;
+
+    // Asegura clases Bootstrap si no vinieran desde el widget
+    if (!pwdInput.classList.contains('form-control')) {
+      pwdInput.classList.add('form-control');
+    }
+
+    btn.addEventListener('click', function () {
+      const isPassword = pwdInput.getAttribute('type') === 'password';
+      pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+      // Cambia icono y atributos de accesibilidad
+      this.setAttribute('aria-pressed', String(isPassword));
+      this.setAttribute('title', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      this.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+      // Mantén el foco en el input
+      pwdInput.focus({ preventScroll: true });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Mi perfil{% endblock %}
+{% block content %}
+
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 m-0">👤 Mi perfil</h1>
+      <div class="small text-white-50">Preferencias de contacto y cuenta · Reservas Inacap</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Aplicar estilos Bootstrap si los widgets no traen clases */
+  form input[type="text"], form input[type="email"], form input[type="number"],
+  form input[type="tel"], form textarea, form select {
+    width: 100%; padding: .6rem .8rem; border: 1px solid #dee2e6;
+    border-radius: .5rem; background: #fff;
+  }
+</style>
+
+<div class="row g-4">
+  <!-- Columna principal -->
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Preferencias</h2>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Teléfono</label>
+              {{ form.phone }}
+              {% if form.phone.errors %}<div class="text-danger small">{{ form.phone.errors }}</div>{% endif %}
+              <div class="form-text">Ej.: +56 9 1234 5678</div>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="form-check">
+                {{ form.receive_emails }}
+                <label class="form-check-label" for="{{ form.receive_emails.id_for_label }}">
+                  Recibir correos de notificaciones
+                </label>
+                {% if form.receive_emails.errors %}<div class="text-danger small">{{ form.receive_emails.errors }}</div>{% endif %}
+              </div>
+            </div>
+          </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <a href="{% url 'dashboard_user' %}" class="btn btn-outline-secondary rounded-3">
+            <i class="bi bi-arrow-left"></i> Volver
+          </a>
+          <button type="submit" class="btn btn-danger rounded-3">
+            <i class="bi bi-save"></i> Guardar
+          </button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna lateral: resumen de cuenta -->
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body">
+        <h2 class="h6 text-muted mb-3">Resumen de cuenta</h2>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <span class="text-muted">Usuario:</span>
+            <span class="fw-semibold">{{ request.user.username }}</span>
+          </li>
+          <li class="mb-2">
+            <span class="text-muted">Nombre:</span>
+            <span class="fw-semibold">
+              {{ request.user.first_name|default:"—" }} {{ request.user.last_name|default:"" }}
+            </span>
+          </li>
+          <li class="mb-2">
+            <span class="text-muted">Correo:</span>
+            <span class="fw-semibold">{{ request.user.email|default:"—" }}</span>
+          </li>
+          <li class="mb-2">
+            <span class="text-muted">Rol:</span>
+            <span class="badge rounded-pill {% if request.user.is_staff %}text-bg-primary{% else %}text-bg-secondary{% endif %}">
+              {% if request.user.is_staff %}Administrador{% else %}Usuario{% endif %}
+            </span>
+          </li>
+          <li class="mb-2">
+            <span class="text-muted">Miembro desde:</span>
+            <span class="fw-semibold">{{ request.user.date_joined|date:"Y-m-d" }}</span>
+          </li>
+        </ul>
+        <hr>
+        <a href="{% url 'password_reset' %}" class="btn btn-outline-danger btn-sm rounded-3">
+          <i class="bi bi-key"></i> Restablecer contraseña por correo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
