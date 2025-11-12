@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Registro{% endblock %}
+
+{% block content %}
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 m-0">Crear cuenta</h1>
+      <div class="small text-white-50">Usa tu correo institucional para registrarte</div>
+    </div>
+    <div class="d-none d-md-block">
+      <a href="{% url 'login' %}" class="btn btn-light text-danger rounded-3">
+        <i class="bi bi-box-arrow-in-right"></i> Ya tengo cuenta
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger rounded-3">
+            {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.email %}
+          <div class="mb-3">
+            <label class="form-label">Correo institucional</label>
+            {{ form.email }}
+            <div class="form-text">
+              Ej.: nombre.apellido@inacap.cl o nombre.apellido@inacapmail.cl
+            </div>
+            {% if form.email.errors %}
+              <div class="text-danger small">{{ form.email.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if form.username %}
+          <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <div class="text-danger small">{{ form.username.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if form.first_name %}
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+              <div class="text-danger small">{{ form.first_name.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if form.last_name %}
+          <div class="mb-3">
+            <label class="form-label">Apellido</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+              <div class="text-danger small">{{ form.last_name.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if form.password1 %}
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <div class="input-group">
+              {{ form.password1 }}
+              <button class="btn btn-outline-secondary" type="button" data-toggle="password" title="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.password1.errors %}
+              <div class="text-danger small">{{ form.password1.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if form.password2 %}
+          <div class="mb-3">
+            <label class="form-label">Confirmar contraseña</label>
+            <div class="input-group">
+              {{ form.password2 }}
+              <button class="btn btn-outline-secondary" type="button" data-toggle="password" title="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.password2.errors %}
+              <div class="text-danger small">{{ form.password2.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary rounded-3">
+              <i class="bi bi-box-arrow-in-right"></i> Ingresar
+            </a>
+            <button type="submit" class="btn btn-primary rounded-3">
+              <i class="bi bi-person-plus"></i> Crear cuenta
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
